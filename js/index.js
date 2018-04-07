@@ -1,5 +1,6 @@
 $(function(){
-
+  cargarCiudades();
+  cargarTipo();
   $('#mostrarTodos').on('click', function(){
     cargarprops();
   });
@@ -61,6 +62,39 @@ function cargarprops(){
     },
     error: function(){
       alert("Error en carga de propiedades");
+    }
+  })
+}
+
+function cargarCiudades(){
+  $.ajax({
+    url: './cargarCiudad.php',
+    dataType: 'text',
+    type: 'post',
+    data:{},
+    success: function(data){
+      $(".filtroCiudad select").append(data);
+      $(".filtroCiudad select").material_select();
+    },
+    error: function(){
+      alert("Error al cargar ciudades");
+    }
+  })
+}
+
+function cargarTipo(){
+  $.ajax({
+    url: './cargarTipo.php',
+    dataType: 'text',
+    type: 'post',
+    data:{},
+    success: function(data){
+      alert(data);
+      $(".filtroTipo select").append(data);
+      $(".filtroTipo select").material_select();
+    },
+    error: function(){
+      alert("Error al cargar tipo");
     }
   })
 }
