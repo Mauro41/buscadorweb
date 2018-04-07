@@ -5,6 +5,7 @@ $(function(){
     cargarprops();
   });
   $('select').material_select();
+  $("#formulario").submit(Filtrar);
 });
 
 var ciudad ="x";
@@ -17,6 +18,40 @@ $("select[name=tipo]").change(function(){
 });
 
 
+function Filtrar(event){
+  event.preventDefault();
+  var rangoCompleto = $("#rangoPrecio").val();
+  var rangoMin = rangoCompleto.substr(0, rangoCompleto.search(";"));
+  var rangoMax = rangoCompleto.substr((rangoCompleto.search(";")+1),((rangoCompleto.length)-rangoCompleto.search(";")+1));
+  form_data = new FormData();
+  form_data.append('ciudad', ciudad);
+  form_data.append('tipo', tipo);
+  form_data.append('rangoMin', rangoMin);
+  form_data.append('rangoMax', rangoMax);
+  $.ajax({
+    url: './filtrarprops.php',
+    dataType: 'text',
+    cache: false,
+    contentType: false,
+    processData: false,
+    data: form_data,
+    type: 'post',
+    success: function(data){
+      if (data == "") {
+        $("quote").remove();
+        $(".itemMostrado").remove();
+        $("<quote>No se encuentran registros...</quote>").insertAfter(".divider");
+      }else{
+        $("quote").remove();
+        $(".itemMostrado").remove();
+        $(data).insertAfter(".divider");
+      }
+    },
+    error: function(){
+      alert("Error filtrando propiedades");
+    }
+  })
+}
 
 /*
   Creación de una función personalizada para jQuery que detecta cuando se detiene el scroll en la página
